@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        function validMTV() {
+          var MTV = $("#txtMTV").val();
+          var regMTV = /^[A-Z]{2}\-[0-9]{4}$/;
+          if (MTV.length == 0) {
+            $(".notitxtMTV").html("* Không được bỏ trống");
+            return false;
+          } else if (regMTV.test(MTV)) {
+            $(".notitxtMTV").html("*");
+            return true;
+          } else {
+            $(".notitxtMTV").html("* Không hợp lệ (ví dụ: XX-0000)");
+            return false;
+          }
+        }
+
+        $("#txtMTV").blur(validMTV);
+
+        function validHVT() {
+          var HVT = $("#txtHVT").val();
+          var regHTV = /^([A-Z]{1}[a-z]*\s)*([A-Z]{1}[a-z]*)$/;
+          if (HVT.length == 0) {
+            $(".notitxtHVT").html("* Không được bỏ trống");
+            return false;
+          } else if (regHVT.test(HVT)) {
+            $(".notitxtHVT").html("*");
+            return true;
+          } else {
+            $(".notitxtHVT").html("* Không hợp lệ (ví dụ: Nguyễn A)");
+            return false;
+          }
+        }
+
+        $("#txtHVT").blur(validHVT);
+
+        function validE() {
+          var E = $("#txtE").val();
+          var regE = /^([A-Za-z0-9_\.])+@([A-Za-z0-9])+\.([A-Za-z0-9])+$/;
+          if (E.length == 0) {
+            $(".notitxtE").html("* Không được bỏ trống");
+            return false;
+          } else if (regE.test(E)) {
+            $(".notitxtE").html("*");
+            return true;
+          } else {
+            $(".notitxtE").html("* Không hợp lệ (ví dụ: example@iuh.com)");
+            return false;
+          }
+        }
+
+        $("#txtE").blur(validE);
+
+        function validSL() {
+          var SL = $("#txtSL").val();
+
+          if (SL <= 0) {
+            $(".notitxtSL").html("* Vui lòng chọn số lượng lớn hơn 0");
+            return false;
+          } else if (SL > 10) {
+            $(".notitxtSL").html(
+              "* Số lượng tối đa mỗi khách hàng cá nhân chỉ được 10 SP"
+            );
+            return false;
+          } else {
+            $(".notitxtSL").html("*");
+            return true;
+          }
+        }
+        $("#txtSL").blur(validSL);
+
+        function updareTT() {
+          var LKH = $("input[name='typeKH']:checked").val();
+          if (LKH == 1) {
+            var total = (($("#txtSL").val() * 100) / 100) * 90;
+            $("#txtTotal").val(total);
+          } else {
+            var total = (($("#txtSL").val() * 100) / 100) * 95;
+            $("#txtTotal").val(total);
+          }
+          return true;
+        }
+        $("input[name='typeKH']").click(updareTT);
+        $("#txtSL").change(updareTT);
+
+        function submitForm() {
+          if (validMTV && validHVT && validE && validSL && updareTT) {
+            var STT = $("tr").length;
+            var MTV = $("#txtMTV").val();
+            var HVT = $("#txtHVT").val();
+            var E = $("#txtE").val();
+            var SL = $("#txtSL").val();
+            var Type =
+              $("input[name='typeKH']:checked").val() == 1
+                ? "Thân thiết"
+                : "Bạn Mới";
+            var Total = $("#txtTotal").val();
+            var content = `
+                <tr>
+                    <td>${STT}</td>
+                    <td>${MTV}</td>
+                    <td>${HVT}</td>
+                    <td>${E}</td>
+                    <td>${SL}</td>
+                    <td>${Type}</td>
+                    <td>${Total}</td>
+                </tr>
+                `;
+            $("table tbody").append(content);
+            $("#my-modal").modal("hide");
+          }
+        }
+
+        function clear() {
+          $("#txtMTV").val("");
+          $("#txtHVT").val("");
+          $("#txtE").val("");
+          $("#txtSL").val("");
+          $("#txtTotal").val("");
+        }
+
+        $('#btn_clear').click(clear);
+        // ;
+        // $("#txtSL");
+        // $("#typeKH");
+        // $("#txtTotal");
+        $("#btn_submit").click(submitForm);
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <img
+            src="https://www.nowads.com.vn/wp-content/uploads/2019/01/banner.jpg"
+            width="100%"
+            alt=""
+          />
+        </div>
+
+        <nav class="nav  col-12">
+          <a class="nav-link" href="#">HOME</a>
+          <a
+            class="nav-link"
+            href="#"
+            data-toggle="modal"
+            data-target="#my-modal"
+            >Subcribe NOW !</a
+          >
+        </nav>
+        
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <img
+            width="100%"
+            src="https://sukienachau.com/wp-content/uploads/2021/08/209732107_1654707428062841_1415787712562501693_n.jpg"
+            alt=""
+          />
+        </div>
+        <div class="col-9">
+          <table class="table table-light">
+            <thead class="thead-light">
+              <tr>
+                <th>STT</th>
+                <th>Mã thành viên</th>
+                <th>Họ và Tên</th>
+                <th>Email</th>
+                <th>Số lượng</th>
+                <th>Loại Khách hàng</th>
+                <th>Thành Tiền</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div
+      id="my-modal"
+      class="modal fade"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="my-modal-title"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="my-modal-title">ĐĂNG KÍ</h5>
+            <button class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="txtMTV">Mã thành viên: </label>
+              <input id="txtMTV" class="form-control" type="text" name="" />
+              <p class="notitxtMTV noti">*</p>
+            </div>
+            <div class="form-group">
+              <label for="txtHVT">Họ và tên:</label>
+              <input id="txtHVT" class="form-control" type="text" name="" />
+              <p class="notitxtHVT noti">*</p>
+            </div>
+            <div class="form-group">
+              <label for="txtE">Email:</label>
+              <input id="txtE" class="form-control" type="text" name="" />
+              <p class="notitxtE noti">*</p>
+            </div>
+            <div class="form-group">
+              <label for="txtSL">Số lượng:</label>
+              <input id="txtSL" class="form-control" type="number" name="" />
+              <p class="notitxtSL noti">*</p>
+            </div>
+            <div class="form-group">
+              <label for="my-input">Loại khách hàng:</label><br />
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="typeKH"
+                  id="typeKH"
+                  value="1"
+                />
+                <label class="form-check-label" for="">Thân thiết</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="typeKH"
+                  id="typeKH"
+                  value="2"
+                  checked
+                />
+                <label class="form-check-label" for="">Bạn mới</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="txtTotal">Thành tiền:</label>
+              <input
+                id="txtTotal"
+                class="form-control"
+                type="text"
+                name=""
+                value="0"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-danger" id="btn_clear">Clear</button>
+            <button class="btn btn-success" id="btn_submit">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
